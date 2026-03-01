@@ -29,7 +29,7 @@ export default function VerifyEmail() {
         <div className="d-flex justify-content-center container" style={{ height: "fit-content" }}>
             <div className="text-center p-4 rounded shadow bg-white">
                 {status === "loading" && <p>Verifying email address...</p>}
-                {status === "success" && <h1 className="header">Welcome to Friendship!</h1>}
+                {status === "success" && <h1 className="header">Welcome to Eventure!</h1>}
                 {status === "success" && <p className="text-black">Your email address has been confirmed. You can now log in.</p>}
                 {status === "success" && <a href="/login" className="btn btn-orange mt-3 text-white">Log in</a>}
                 {status === "error" && <h1 className="text-danger">Oops, something went wrong!</h1>}

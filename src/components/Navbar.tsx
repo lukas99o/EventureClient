@@ -51,7 +51,7 @@ export default function Navbar() {
                 <NavLink className="navbar-brand fs-3 fw-bold mb-1" to="/events" onClick={closeNavbar}
                     style={{ color: "#ffffff" }}
                 >
-                <p className="text-white fs-3 m-0">Friendship <img src={logo} alt="Friendship" style={{ maxHeight: "30px", mixBlendMode: "multiply" }} /></p>
+                <p className="text-white fs-3 m-0">Eventure <img src={logo} alt="Eventure" style={{ maxHeight: "30px", mixBlendMode: "multiply" }} /></p>
                 </NavLink>
                 <button
                     className="navbar-toggler"

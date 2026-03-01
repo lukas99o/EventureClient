@@ -79,7 +79,7 @@ describe('Navbar', () => {
       </BrowserRouter>
     )
 
-    const logo = screen.getByAltText('Friendship')
+    const logo = screen.getByAltText('Eventure')
     expect(logo).toBeInTheDocument()
   })
 })

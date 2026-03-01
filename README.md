@@ -1,6 +1,6 @@
-# 🫂 Friendship — React Frontend
+# 🫂 Eventure — React Frontend
 
-**Friendship** is a social web app where users can join or host events, add friends, chat in real-time, and manage profiles.  
+**Eventure** is a social web app where users can join or host events, add friends, chat in real-time, and manage profiles.  
 Built with **React**, **TypeScript**, and **.NET**, fully hosted on **Microsoft Azure**.
 
 🔗 **Live App:** [https://ashy-stone-09b187203.2.azurestaticapps.net/](https://ashy-stone-09b187203.2.azurestaticapps.net/)
@@ -40,11 +40,11 @@ Built with **React**, **TypeScript**, and **.NET**, fully hosted on **Microsoft 
 
 ```bash
 git clone <repository-url>
-cd friendship-frontend
+cd eventure-frontend
 npm install
 npm run dev
 ```
 App runs on [http://localhost:5173](http://localhost:5173).
 
 ## ✨ Related Project
-Backend: 🔗 [Friendship API](https://github.com/lukas99o/Friendship-Api/tree/master?tab=readme-ov-file)
+Backend: 🔗 [Eventure API](https://github.com/lukas99o/EventureApi/tree/master?tab=readme-ov-file)

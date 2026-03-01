@@ -104,7 +104,7 @@ export default function Register() {
         <div className="d-flex justify-content-center container pb-5" style={{ height: "fit-content" }}>
             <form onSubmit={handleRegister} className="p-4 rounded shadow bg-white" style={{ width: "400px" }}>
                 <h1 className="mb-4 text-center header">Sign up</h1>
-                <p className="fs-6 border p-2 text-center">It can take up to 1 minute for Azure to warm up the Friendship API when the app has been in standby. Grab a coffee and try again shortly.</p>
+                <p className="fs-6 border p-2 text-center">It can take up to 1 minute for Azure to warm up the Eventure API when the app has been in standby. Grab a coffee and try again shortly.</p>
                 <div className="mb-3">
                     <label className="form-label" htmlFor="firstName">First name</label>
                     <input
