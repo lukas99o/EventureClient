@@ -17,10 +17,10 @@ describe('formatDate', () => {
     expect(formatted).toContain('2024')
   })
 
-  it('formaterar tid med ledande nollor', () => {
-    const dateString = '2024-06-05T09:05:00'
+  it('formaterar tid med ledande nollor i stockholm-tidszon', () => {
+    const dateString = '2024-06-05T09:05:00Z'
     const formatted = formatDate(dateString)
     
-    expect(formatted).toMatch(/09:05/)
+    expect(formatted).toMatch(/11:05/)
   })
 })
