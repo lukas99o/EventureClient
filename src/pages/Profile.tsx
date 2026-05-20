@@ -9,10 +9,12 @@ import type { UserDto } from "../types";
 export default function Profile() {
     const [user, setUser] = useState<UserDto | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [uploadError, setUploadError] = useState<string>("");
     const [editingAbout, setEditingAbout] = useState(false);
     const [aboutText, setAboutText] = useState("");
     const [aboutError, setAboutError] = useState("");
+    const [savingChanges, setSavingChanges] = useState(false);
     const userId = localStorage.getItem("userId") || "";
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -20,34 +22,74 @@ export default function Profile() {
         GetUser(userId).then(data => setUser(data));
     }, []);
 
+    useEffect(() => {
+        if (!selectedFile) {
+            setPreviewUrl(null);
+            return;
+        }
+
+        const objectUrl = URL.createObjectURL(selectedFile);
+        setPreviewUrl(objectUrl);
+
+        return () => {
+            URL.revokeObjectURL(objectUrl);
+        };
+    }, [selectedFile]);
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setSelectedFile(e.target.files[0]);
         }
     };
 
-    const handleUpload = async () => {
-        if (!selectedFile || !user) return;
-        setUploadError("");
+    const handleSaveChanges = async () => {
+        if (!user) return;
 
-        const path = await uploadProfilePicture(selectedFile);
-        if (path) {
-            setUser(prev => prev ? { ...prev, profilePicturePath: path } : prev);
-            setSelectedFile(null);
-        } else {
-            setUploadError("Max 2MB. Only JPG, PNG, and JPEG are allowed.");
-        }
-    };
+        const hasAboutChanges = editingAbout && aboutText.trim() !== (user.about ?? "").trim();
 
-    const handleAboutSave = async () => {
-        if (!aboutText.trim() || !user) {
+        if (hasAboutChanges && !aboutText.trim()) {
             setAboutError("You need to write something about yourself.");
             return;
         }
+
+        setUploadError("");
         setAboutError("");
-        await updateUserAbout(aboutText);
-        setUser(prev => prev ? { ...prev, about: aboutText } : prev);
-        setEditingAbout(false);
+        setSavingChanges(true);
+
+        let nextProfilePicturePath = user.profilePicturePath;
+        let nextAbout = user.about;
+
+        if (selectedFile) {
+            const path = await uploadProfilePicture(selectedFile);
+            if (!path) {
+                setUploadError("Max 2MB. Only JPG, PNG, and JPEG are allowed.");
+                setSavingChanges(false);
+                return;
+            }
+
+            nextProfilePicturePath = path;
+            setSelectedFile(null);
+        }
+
+        if (hasAboutChanges) {
+            await updateUserAbout(aboutText);
+            nextAbout = aboutText;
+            setEditingAbout(false);
+        }
+
+        setUser(prev => prev ? { ...prev, profilePicturePath: nextProfilePicturePath, about: nextAbout } : prev);
+        setSavingChanges(false);
+    };
+
+    const handleCancelChanges = () => {
+        setSelectedFile(null);
+        setUploadError("");
+        setAboutError("");
+
+        if (editingAbout) {
+            setAboutText(user?.about ?? "");
+            setEditingAbout(false);
+        }
     };
 
     const handleProfilePicClick = () => {
@@ -71,6 +113,10 @@ export default function Profile() {
 
     if (!user) return <div>Loading...</div>;
 
+    const hasPendingChanges =
+        Boolean(selectedFile) ||
+        (editingAbout && aboutText.trim() !== (user.about ?? "").trim());
+
     return (
         <div className="container d-flex justify-content-center profile-container pb-5">
             <div className="bg-white rounded-4 shadow p-4 container-header" style={{ maxWidth: 420, width: "100%" }}>
@@ -81,9 +127,9 @@ export default function Profile() {
                         onMouseEnter={e => e.currentTarget.classList.add("profile-pic-hover")}
                         onMouseLeave={e => e.currentTarget.classList.remove("profile-pic-hover")}
                     >
-                        {user.profilePicturePath ? (
+                        {(previewUrl || user.profilePicturePath) ? (
                             <img
-                                src={`${API_BASE_URL}${user.profilePicturePath}`}
+                                src={previewUrl ?? `${API_BASE_URL}${user.profilePicturePath}`}
                                 alt="Profile picture"
                                 className="rounded-circle border border-3 border-warning mb-3"
                                 style={{ width: 120, height: 120, objectFit: "cover", transition: "filter 0.2s" }}
@@ -138,17 +184,6 @@ export default function Profile() {
                             </span>
                         )}
                     </div>
-                    {selectedFile && (
-                        <div className="w-100 text-center mt-2">
-                            <button
-                                className="btn btn-warning w-100 mb-3"
-                                onClick={handleUpload}
-                            >
-                                Upload new profile picture
-                            </button>
-                            {uploadError && <div className="text-danger mt-2">{uploadError}</div>}
-                        </div>
-                    )}
                     {user.profilePicturePath && !selectedFile && (
                         <div className="w-100 text-center mt-2 mb-3">
                             <button
@@ -176,12 +211,6 @@ export default function Profile() {
                                     placeholder="Write something about yourself..."
                                     maxLength={150}
                                 />
-                                <button className="btn btn-warning me-2" onClick={handleAboutSave}>
-                                    Save
-                                </button>
-                                <button className="btn btn-outline-secondary" onClick={() => setEditingAbout(false)}>
-                                    Cancel
-                                </button>
                                 {aboutError && <div className="text-danger mt-2">{aboutError}</div>}
                             </div>
                         ) : user.about && user.about.trim() !== "" ? (
@@ -209,6 +238,27 @@ export default function Profile() {
                         )}
                     </div>
                 </div>
+                {hasPendingChanges && (
+                    <div className="mt-3">
+                        <button
+                            className="btn w-100 text-white border-0"
+                            style={{ backgroundColor: "#55cde7" }}
+                            onClick={handleSaveChanges}
+                            disabled={savingChanges}
+                        >
+                            {savingChanges ? "Saving..." : "Save Changes"}
+                        </button>
+                        <button
+                            className="btn btn-outline-secondary w-100 mt-2"
+                            onClick={handleCancelChanges}
+                            disabled={savingChanges}
+                        >
+                            Cancel
+                        </button>
+                        {uploadError && <div className="text-danger mt-2">{uploadError}</div>}
+                        {aboutError && <div className="text-danger mt-2">{aboutError}</div>}
+                    </div>
+                )}
             </div>
         </div>
     );

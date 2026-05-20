@@ -154,8 +154,10 @@ export default function Friends() {
     }
   }
 
+  const isMobileCompactView = width < 768
+
   return (
-    <div className="container d-flex flex-column" style={{ maxHeight: "900px" }}>
+    <div className="container d-flex flex-column" style={{ height: "65vh" }}>
       <div className="d-flex gap-4 flex-grow-1" style={{ overflowY: "hidden" }}>
         {(width > 968 || (activeView && width < 968)) && (
           <div className="bg-light rounded shadow p-3 d-flex flex-column container-header" style={{ width: width > 968 ? "50%" : "100%" }}>
@@ -215,21 +217,21 @@ export default function Friends() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex-grow-1 overflow-auto border rounded p-3 shadow-sm">
+                    <div className={`flex-grow-1 overflow-auto border rounded shadow-sm ${isMobileCompactView ? "p-2" : "p-3"}`}>
                         {filteredFriends.map(friend => (
-                        <div key={friend.username} className="border rounded p-3 mb-3 bg-white shadow-sm d-flex justify-content-between align-items-md-center flex-column flex-md-row">
-                            <div className="d-flex gap-3 align-items-center">
+                      <div key={friend.username} className={`border rounded bg-white shadow-sm d-flex justify-content-between align-items-md-center flex-column flex-md-row ${isMobileCompactView ? "p-2 mb-2" : "p-3 mb-3"}`}>
+                        <div className={`d-flex align-items-center ${isMobileCompactView ? "gap-2" : "gap-3"}`}>
                             <div className="bg-secondary rounded-circle d-flex justify-content-center align-items-center" 
-                              style={{ width: "100px", height: "100px" }}>{friend.profilePicturePath ? <img src={`${API_BASE_URL}${friend.profilePicturePath}`} 
+                          style={{ width: isMobileCompactView ? "64px" : "100px", height: isMobileCompactView ? "64px" : "100px" }}>{friend.profilePicturePath ? <img src={`${API_BASE_URL}${friend.profilePicturePath}`} 
                               alt="Profile picture" 
-                              className="rounded-circle" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span className="text-white" style={{ fontSize: 48 }}>👤</span>}</div>
+                          className="rounded-circle" style={{ width: "100%", height: "100%", objectFit: "cover" }} /> : <span className="text-white" style={{ fontSize: isMobileCompactView ? 30 : 48 }}>👤</span>}</div>
                             <div>
-                                <h5 className={`mb-1 ${width < 768 ? "fs-6" : ""}`}>{friend.username}</h5>
-                                <p className={`mb-0 text-muted ${width < 768 ? "fs-6" : ""}`}>{friend.name}, {calculateAge(friend.age)} years</p>
+                          <h5 className={`mb-1 ${isMobileCompactView ? "fs-6" : ""}`}>{friend.username}</h5>
+                          <p className={`mb-0 text-muted ${isMobileCompactView ? "small" : ""}`}>{friend.name}, {calculateAge(friend.age)} years</p>
                             </div>
                             </div>
-                            <div className="d-flex gap-2 mt-2 mt-md-0 justify-content-end justify-content-md-start flex-md-column">
-                                <button className="btn-orange px-2 px-lg-4 py-1 py-lg-2"
+                        <div className={`d-flex mt-2 mt-md-0 justify-content-end justify-content-md-start flex-md-column ${isMobileCompactView ? "gap-1" : "gap-2"}`}>
+                          <button className={`btn-orange ${isMobileCompactView ? "px-2 py-1 btn-sm" : "px-2 px-lg-4 py-1 py-lg-2"}`}
                                     onClick={() => {
                                         setSelectedFriendId(friend.userId)
                                         setSelectedChatUser(null)
@@ -238,7 +240,7 @@ export default function Friends() {
                                 >
                                   Profile
                                 </button>
-                                <button className="btn-orange px-2 px-lg-4 py-1 py-lg-2"
+                          <button className={`btn-orange ${isMobileCompactView ? "px-2 py-1 btn-sm" : "px-2 px-lg-4 py-1 py-lg-2"}`}
                                     onClick={async () => {
                                     setSelectedFriendId(null)
                                     setChatStarted(false);
@@ -258,7 +260,7 @@ export default function Friends() {
                                 >
                                     Chat
                                 </button>
-                              <button className="btn btn-outline-danger px-2 px-lg-4 py-1 py-lg-2"
+                              <button className={`btn btn-outline-danger ${isMobileCompactView ? "px-2 py-1 btn-sm" : "px-2 px-lg-4 py-1 py-lg-2"}`}
                                 onClick={() => removeFriend(friend)}
                               >
                                 Remove friend
