@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD wf
+name: Azure Static Web Apps CI/CD #initate run
 
 on:
   push:
@@ -43,8 +43,8 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ASHY_STONE_09B187203 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"              # Root of your app
-          output_location: "dist"        # Adjust if build output is elsewhere
+          app_location: "/"              
+          output_location: "dist"       
           
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
