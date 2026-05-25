@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import { API_BASE_URL } from "../config";
@@ -13,12 +13,6 @@ export default function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-
-    useEffect(() => {
-        fetch(`${API_BASE_URL}/ping`)
-            .then(() => console.log("✅ API wake-up request sent"))
-            .catch(err => console.error("❌ API not reachable", err));
-    }, []);
 
     function validateEmail(email: string) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

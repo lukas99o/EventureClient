@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/authContext";
 import { API_BASE_URL } from "../config";
@@ -12,12 +12,6 @@ export default function Login() {
     const navigate = useNavigate();
     const { login } = useAuth(); 
     const [showPassword, setShowPassword] = useState(false);
-
-    useEffect(() => {
-        fetch(`${API_BASE_URL}/ping`)
-            .then(() => console.log("✅ API wake-up request sent"))
-            .catch(err => console.error("❌ API not reachable", err));
-    }, []);
 
     async function handleLogin(e: React.FormEvent, guest = false) {
         e.preventDefault();

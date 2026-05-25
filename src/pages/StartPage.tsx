@@ -1,14 +1,6 @@
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { API_BASE_URL } from "../config";
 
 export default function StartPage() {
-    useEffect(() => {
-        fetch(`${API_BASE_URL}/ping`)
-            .then(() => console.log("✅ API wake-up request sent"))
-            .catch(err => console.error("❌ API not reachable", err));
-    }, []);
-
     return (
         <div
             className="d-flex flex-column align-items-center pb-5 px-3"
