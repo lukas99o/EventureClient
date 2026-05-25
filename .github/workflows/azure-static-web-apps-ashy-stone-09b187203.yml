@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD #initate run
+name: Azure Static Web Apps CI/CD #initate run3
 
 on:
   push:
