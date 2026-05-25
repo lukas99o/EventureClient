@@ -41,7 +41,6 @@ describe('Login integration', () => {
     const user = userEvent.setup()
 
     fetchMock
-      .mockResolvedValueOnce(new Response(null, { status: 200 }))
       .mockResolvedValueOnce(
         new Response(
           JSON.stringify({ token: 'jwt-token', username: 'TestUser', userId: 'user-1' }),
@@ -69,7 +68,6 @@ describe('Login integration', () => {
     const user = userEvent.setup()
 
     fetchMock
-    .mockResolvedValueOnce(new Response(null, { status: 200 }))
     .mockResolvedValueOnce(new Response('Felaktig e-post eller lösenord.', { status: 401 }))
 
     render(
@@ -91,7 +89,6 @@ describe('Login integration', () => {
     const user = userEvent.setup()
 
     fetchMock
-    .mockResolvedValueOnce(new Response(null, { status: 200 }))
     .mockResolvedValueOnce(new Response('You must confirm your email first.', { status: 400 }))
 
     render(
