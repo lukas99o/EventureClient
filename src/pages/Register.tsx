@@ -36,6 +36,38 @@ export default function Register() {
         return birthDate <= today;
     }
 
+    async function getRegistrationErrorMessage(res: Response) {
+        const errorText = await res.text();
+
+        if (errorText.includes("The username is already taken.") || errorText.includes("DuplicateUserName")) {
+            return "That username is already taken.";
+        }
+
+        if (errorText.includes("The email address is already in use.") || errorText.includes("DuplicateEmail")) {
+            return "That email address is already in use.";
+        }
+
+        try {
+            const errorJson = JSON.parse(errorText) as { message?: string; errors?: string[] };
+
+            if (errorJson.errors?.some(error => error.includes("DuplicateUserName"))) {
+                return "That username is already taken.";
+            }
+
+            if (errorJson.errors?.some(error => error.includes("DuplicateEmail"))) {
+                return "That email address is already in use.";
+            }
+
+            if (errorJson.message) {
+                return errorJson.message;
+            }
+        } catch {
+            // Fall through to the generic message below.
+        }
+
+        return "Something went wrong. Please try again.";
+    }
+
     async function handleRegister(e: React.FormEvent) {
         e.preventDefault();
         setError("");
@@ -80,16 +112,7 @@ export default function Register() {
             });
 
             if (!res.ok) {
-                const errorText = await res.text();
-                
-                if (errorText === "E-postadressen används redan.") {
-                    setError("That email address is already in use.");
-                } else if (errorText === "Användarnamnet är redan taget.") {
-                    setError("That username is already taken.");
-                } else {
-                    setError("Something went wrong. Please try again.");
-                }
-
+                setError(await getRegistrationErrorMessage(res));
                 return;
             }
 
